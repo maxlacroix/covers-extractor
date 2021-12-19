@@ -1,0 +1,73 @@
+---
+title: "Interesting Bets - Covers"
+author: "Maxime Lacroix"
+date:  "`r format(Sys.Date(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+knitr::opts_knit$set(root.dir = here::here())
+
+```
+
+## Interesting Bets
+```{r cars, results='asis'}
+nfl <- extract_odds("https://www.covers.com/sport/football/nfl/odds") %>% 
+  add_names(.,
+            "https://www.covers.com/sport/football/nfl/matchup/") %>% 
+  extract_good_bets(.) %>% 
+  mutate(Sport = "NFL") %>% 
+  select(Sport,
+         everything())
+
+nhl <- extract_odds("https://www.covers.com/sport/hockey/nhl/odds") %>% 
+  add_names(.,
+            "https://www.covers.com/sport/hockey/nhl/matchup/") %>% 
+extract_good_bets(.) %>% 
+  mutate(Sport = "NHL") %>% 
+  select(Sport,
+         everything())
+
+nba <- extract_odds("https://www.covers.com/sport/basketball/nba/odds") %>% 
+  add_names(.,
+            "https://www.covers.com/sport/basketball/nba/matchup/") %>% 
+  extract_good_bets(.) %>% 
+  mutate(Sport = "NBA") %>% 
+  select(Sport,
+         everything())
+
+
+ncaaf <- extract_odds("https://www.covers.com/sport/football/ncaaf/odds") %>% 
+  add_names(.,
+            "https://www.covers.com/sport/football/ncaaf/matchup/") %>% 
+  extract_good_bets(.)%>% 
+  mutate(Sport = "NCAA Football") %>% 
+  select(Sport,
+         everything())
+
+
+ncaab <- extract_odds("https://www.covers.com/sport/basketball/ncaab/odds") %>% 
+  add_names(.,
+            "https://www.covers.com/sport/basketball/ncaab/matchup/") %>% 
+  extract_good_bets(.) %>% 
+  mutate(Sport = "NCAA Basketball") %>% 
+  select(Sport,
+         everything())
+
+
+table_to_show <- bind_rows(nfl,
+                           ncaaf,
+                           ncaab,
+                           nba,
+                           nhl) %>% 
+  mutate(Market_odds = round(Market_odds,2),
+         ratio = round(ratio, 2),
+         kelly= scales::percent(kelly, accuracy = 0.01))
+
+
+reactable(table_to_show, filterable = TRUE, sortable = TRUE)
+
+```
