@@ -6,6 +6,7 @@ library(stringr)
 library(xml2)
 library(tictoc)
 library(tidyr)
+library(reactable)
 
 message("Sourcing utilities functions")
 
