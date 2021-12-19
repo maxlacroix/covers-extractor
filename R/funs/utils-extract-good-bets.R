@@ -56,5 +56,41 @@ extract_good_bets <- function(data_odds){
     arrange(desc(ratio)) %>% 
     select(-class,
            -data.type,
-           -overall_prob) 
+           -overall_prob) %>% 
+    select(-data.game,
+           -data.date,
+           -n) %>% 
+    mutate(Matchup = paste0(Away_team, " at ", Home_team)) %>% 
+    mutate(Bet_to_take = case_when(
+      
+      Away_odds > mean_away_cor ~ Away_team,
+      TRUE ~ Home_team
+      
+      
+    ),
+    
+    Odds_to_take = case_when(
+      
+      Away_odds > mean_away_cor ~ Away_odds,
+      TRUE ~ Home_odds
+      
+      
+    ),
+    
+    Market_odds = case_when(
+      
+      Away_odds > mean_away_cor ~ mean_away_cor,
+      TRUE ~ mean_home_cor
+      
+      
+    )
+    
+    ) %>%
+    select(data.book,
+           Matchup,
+           Bet_to_take,
+           Odds_to_take,
+           Market_odds,
+           ratio,
+           kelly)
 }
